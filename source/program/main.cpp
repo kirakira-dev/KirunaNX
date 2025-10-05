@@ -25,7 +25,18 @@ static void KirunaOverlay() {
     ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
     ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
 
+    // Scale this menu by 1.5x (font + paddings)
+    const float kirunaScale = 1.5f;
+    ImGuiStyle &style = ImGui::GetStyle();
+    ImVec2 scaledWindowPadding(style.WindowPadding.x * kirunaScale, style.WindowPadding.y * kirunaScale);
+    ImVec2 scaledFramePadding(style.FramePadding.x * kirunaScale, style.FramePadding.y * kirunaScale);
+    ImVec2 scaledItemSpacing(style.ItemSpacing.x * kirunaScale, style.ItemSpacing.y * kirunaScale);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, scaledWindowPadding);
+    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, scaledFramePadding);
+    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, scaledItemSpacing);
+
     if (ImGui::Begin("KirunaNX", nullptr, flags)) {
+        ImGui::SetWindowFontScale(kirunaScale);
         ImGui::Selectable("Combat", false);
         ImGui::Selectable("Movement", false);
         ImGui::Selectable("Visual", false);
@@ -34,6 +45,7 @@ static void KirunaOverlay() {
     }
     ImGui::End();
 
+    ImGui::PopStyleVar(3); // ItemSpacing, FramePadding, WindowPadding
     ImGui::PopStyleColor();
     ImGui::PopStyleVar();
 }
