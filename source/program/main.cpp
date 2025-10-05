@@ -3,6 +3,7 @@
 #include "imgui_nvn.h" 
 #include "nya.h"
 #include "imgui.h"
+#include "nya/windows/menu_system.h"
  
 HOOK_DEFINE_TRAMPOLINE(nnMain_hook) { 
     static void Callback() { 
@@ -50,12 +51,19 @@ static void KirunaOverlay() {
     ImGui::PopStyleVar();
 }
 
+// Menu frame: handle input and render the menu each frame
+static void KirunaMenuFrame() {
+    nya::menu::handleInput();
+    nya::menu::renderMenu();
+}
+
 extern "C" void exl_main(void *x0, void *x1) { 
     exl::hook::Initialize();
     nnMain_hook::InstallAtSymbol("nnMain"); 
     nvnImGui::InstallHooks();
     nvnImGui::addDrawFunc(nya::nya_main);
     nvnImGui::addDrawFunc(KirunaOverlay);
+    nvnImGui::addDrawFunc(KirunaMenuFrame);
 }
 
 extern "C" NORETURN void exl_exception_entry() {

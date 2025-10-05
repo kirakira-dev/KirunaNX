@@ -134,8 +134,12 @@ namespace nya {
             if (g_MenuNav.menuVisible) {
                 g_MenuNav.currentState = MenuState::Main;
                 g_MenuNav.selectedOption = 0;
+                // When menu is visible, block game input via HID hook toggle
+                nya::hid::toggleInput = true;
             } else {
                 g_MenuNav.currentState = MenuState::Hidden;
+                // Re-enable game input
+                nya::hid::toggleInput = false;
             }
         }
 

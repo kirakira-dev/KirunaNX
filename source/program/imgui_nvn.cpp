@@ -170,8 +170,9 @@ bool nvnImGui::InitImGui() {
         ImguiNvnBackend::InitBackend(initInfo);
 
         nya::hid::initKBM();
-
         nya::hid::setPort(0);
+        // Install HID hooks so we can optionally block game input while menu is open
+        nya::hid::install_hooks();
 
         return true;
     } else { 

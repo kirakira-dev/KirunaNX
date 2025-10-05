@@ -72,18 +72,16 @@ namespace nya::hid {
     void setPort(ulong port) { selectedPort = port; } 
 
     void updatePadState() {
-        if (isMouseHold(nn::hid::MouseButton::Left)) { 
-            //nya::nya_log("meow\n");
+        // Update controller states every frame
+        prevControllerState = curControllerState;
+        tryGetContState(&curControllerState, selectedPort);
 
-            prevControllerState = curControllerState;
-            tryGetContState(&curControllerState, selectedPort); 
+        prevhControllerState = curhControllerState;
+        tryGetContState(&curhControllerState, 0x20);
 
-            prevhControllerState = curhControllerState;
-            tryGetContState(&curhControllerState, 0x20); 
-        }
-
+        // Update keyboard and mouse states every frame
         prevKeyboardState = curKeyboardState;
-        nn::hid::GetKeyboardState(&curKeyboardState); 
+        nn::hid::GetKeyboardState(&curKeyboardState);
 
         prevMouseState = curMouseState;
         nn::hid::GetMouseState(&curMouseState);
