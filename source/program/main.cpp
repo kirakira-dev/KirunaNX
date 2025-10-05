@@ -3,6 +3,8 @@
 #include "imgui_nvn.h" 
 #include "nya.h"
 #include "imgui.h"
+#include "utilites/input_mgr.h"
+#include "nya/windows/menu_system.h"
  
 HOOK_DEFINE_TRAMPOLINE(nnMain_hook) { 
     static void Callback() { 
@@ -14,44 +16,15 @@ HOOK_DEFINE_TRAMPOLINE(nnMain_hook) {
 }; 
 
 static void KirunaOverlay() {
-    ImGui::SetNextWindowPos(ImVec2(0.0f, 0.0f), ImGuiCond_Always);
-
-    ImGuiWindowFlags flags = 0;
-    flags |= ImGuiWindowFlags_NoMove;
-    flags |= ImGuiWindowFlags_NoResize;
-    flags |= ImGuiWindowFlags_NoCollapse;
-    flags |= ImGuiWindowFlags_NoSavedSettings;
-
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-    ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(0.0f, 0.0f, 0.0f, 1.0f));
-
-    // Scale this menu by 1.5x (font + paddings)
-    const float kirunaScale = 1.5f;
-    ImGuiStyle &style = ImGui::GetStyle();
-    ImVec2 scaledWindowPadding(style.WindowPadding.x * kirunaScale, style.WindowPadding.y * kirunaScale);
-    ImVec2 scaledFramePadding(style.FramePadding.x * kirunaScale, style.FramePadding.y * kirunaScale);
-    ImVec2 scaledItemSpacing(style.ItemSpacing.x * kirunaScale, style.ItemSpacing.y * kirunaScale);
-    ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, scaledWindowPadding);
-    ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, scaledFramePadding);
-    ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, scaledItemSpacing);
-
-    if (ImGui::Begin("KirunaNX", nullptr, flags)) {
-        ImGui::SetWindowFontScale(kirunaScale);
-        ImGui::Selectable("Combat", false);
-        ImGui::Selectable("Movement", false);
-        ImGui::Selectable("Visual", false);
-        ImGui::Selectable("Render", false);
-        ImGui::Selectable("Debug/Test", false);
-    }
-    ImGui::End();
-
-    ImGui::PopStyleVar(3); // ItemSpacing, FramePadding, WindowPadding
-    ImGui::PopStyleColor();
-    ImGui::PopStyleVar();
+    // Drive menu input and rendering
+    nya::menu::handleInput();
+    nya::menu::renderMenu();
 }
 
 extern "C" void exl_main(void *x0, void *x1) { 
     exl::hook::Initialize();
+    // Install input hooks to allow disabling game input while menu is open
+    nya::hid::install_hooks();
     nnMain_hook::InstallAtSymbol("nnMain"); 
     nvnImGui::InstallHooks();
     nvnImGui::addDrawFunc(nya::nya_main);

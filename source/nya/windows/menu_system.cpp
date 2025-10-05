@@ -8,13 +8,14 @@ namespace nya {
         FeatureToggles g_Features;
 
         void handleInput() {
-            // L button to toggle menu
-            if (nya::hid::isPressL()) {
-                toggleMenu();
-            }
-
-            // Only handle navigation if menu is visible
+            // OctoMenu-style: Open only when hidden with L press + R hold
             if (!g_MenuNav.menuVisible) {
+                if (nya::hid::isPressL() && nya::hid::isHoldR()) {
+                    g_MenuNav.menuVisible = true;
+                    g_MenuNav.currentState = MenuState::Main;
+                    g_MenuNav.selectedOption = 0;
+                    nya::hid::toggleInput = true;
+                }
                 return;
             }
 
@@ -123,6 +124,7 @@ namespace nya {
             if (g_MenuNav.currentState == MenuState::Main) {
                 g_MenuNav.menuVisible = false;
                 g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             } else {
                 g_MenuNav.currentState = MenuState::Main;
                 g_MenuNav.selectedOption = 0;
@@ -134,8 +136,10 @@ namespace nya {
             if (g_MenuNav.menuVisible) {
                 g_MenuNav.currentState = MenuState::Main;
                 g_MenuNav.selectedOption = 0;
+                nya::hid::toggleInput = true;
             } else {
                 g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             }
         }
 
@@ -331,6 +335,12 @@ namespace nya {
                 case MenuState::Hidden:
                     // Don't render anything
                     break;
+            }
+
+            // If any window was closed via ImGui close button, ensure state and input mirror visibility
+            if (!g_MenuNav.menuVisible) {
+                g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             }
         }
     }
