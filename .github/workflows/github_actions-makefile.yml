@@ -15,9 +15,8 @@ jobs:
 
       - name: Install devkitPro pacman
         run: |
-          wget https://apt.devkitpro.org/install-devkitpro-pacman
-          chmod +x install-devkitpro-pacman
-          sudo ./install-devkitpro-pacman
+          chmod +x .github/devkitpro/pacman-installer
+          sudo .github/devkitpro/pacman-installer
 
       - name: Install devkitA64 and switch libraries
         run: |
