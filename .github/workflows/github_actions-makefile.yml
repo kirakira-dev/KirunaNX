@@ -1,0 +1,41 @@
+name: auto-make
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git wget tar xz-utils
+
+      - name: Install devkitPro pacman
+        run: |
+          wget https://apt.devkitpro.org/install-devkitpro-pacman
+          chmod +x install-devkitpro-pacman
+          sudo ./install-devkitpro-pacman
+
+      - name: Install devkitA64 and switch libraries
+        run: |
+          sudo dkp-pacman -Syu --noconfirm
+          sudo dkp-pacman -S --noconfirm switch-dev devkitA64 libnx switch-mesa switch-zlib switch-freetype switch-libjpeg-turbo
+
+      - name: Add devkitPro to PATH
+        run: echo "export PATH=/opt/devkitpro/devkitA64/bin:\$PATH" >> $GITHUB_ENV
+
+      - name: Configure CMake
+        run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
+
+      - name: washwash
+        run: make clean
+      - name: make
+        run: make
+      - name: save artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: deploy-files
+          path: deploy/
