@@ -5,35 +5,21 @@ on: [push, pull_request]
 jobs:
   build:
     runs-on: ubuntu-latest
+    container:
+      image: devkitpro/devkita64
     steps:
       - uses: actions/checkout@v4
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git wget tar xz-utils
-
-      - name: Install devkitPro pacman
-        run: |
-          chmod +x .github/devkitpro/pacman-installer
-          sudo .github/devkitpro/pacman-installer
-
-      - name: Install devkitA64 and switch libraries
-        run: |
-          sudo dkp-pacman -Syu --noconfirm
-          sudo dkp-pacman -S --noconfirm switch-dev devkitA64 libnx switch-mesa switch-zlib switch-freetype switch-libjpeg-turbo
-
-      - name: Add devkitPro to PATH
-        run: echo "export PATH=/opt/devkitpro/devkitA64/bin:\$PATH" >> $GITHUB_ENV
 
       - name: Configure CMake
         run: cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=/opt/devkitpro/cmake/Switch.cmake
 
-      - name: washwash
-        run: make clean
-      - name: make
+      - name: Clean build
+        run: make clean || true
+
+      - name: Build
         run: make
-      - name: save artifacts
+
+      - name: Save artifacts
         uses: actions/upload-artifact@v4
         with:
           name: deploy-files
