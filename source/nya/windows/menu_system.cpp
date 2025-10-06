@@ -8,19 +8,24 @@ namespace nya {
         FeatureToggles g_Features;
 
         void handleInput() {
-            // L button to toggle menu
-            if (nya::hid::isPressL()) {
+            // Toggle menu: L press while holding R
+            if (nya::hid::isButtonPress(nn::hid::NpadButton::L) &&
+                nya::hid::isButtonHold(nn::hid::NpadButton::R)) {
                 toggleMenu();
+                return;
+            } else {
+                // Hide menu: Left Stick press
+                if (nya::hid::isButtonPress(nn::hid::NpadButton::StickL)) {
+                    g_MenuNav.menuVisible = false;
+                    g_MenuNav.currentState = MenuState::Hidden;
+                    // Re-enable game input when hiding the menu
+                    nya::hid::toggleInput = false;
+                    return;
+                }
             }
 
             // Only handle navigation if menu is visible
             if (!g_MenuNav.menuVisible) {
-                return;
-            }
-
-            // Left stick button to close menu
-            if (nya::hid::isPressStickL()) {
-                goBack();
                 return;
             }
 
@@ -148,7 +153,7 @@ namespace nya {
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
             if (ImGui::Begin("KirunaNX - Main Menu", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Use L to toggle menu, DPAD to navigate, A to select, Left Stick to go back");
+                ImGui::Text("Press L while holding R to toggle. Press Left Stick to hide. Use DPAD to navigate, A to select.");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::mainOptionsCount; i++) {
