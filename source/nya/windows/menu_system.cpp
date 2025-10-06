@@ -8,13 +8,14 @@ namespace nya {
         FeatureToggles g_Features;
 
         void handleInput() {
-            // L button to toggle menu
-            if (nya::hid::isPressL()) {
-                toggleMenu();
-            }
-
-            // Only handle navigation if menu is visible
+            // OctoMenu-style: Open only when hidden with L press + R hold
             if (!g_MenuNav.menuVisible) {
+                if (nya::hid::isPressL() && nya::hid::isHoldR()) {
+                    g_MenuNav.menuVisible = true;
+                    g_MenuNav.currentState = MenuState::Main;
+                    g_MenuNav.selectedOption = 0;
+                    nya::hid::toggleInput = true;
+                }
                 return;
             }
 
@@ -123,6 +124,7 @@ namespace nya {
             if (g_MenuNav.currentState == MenuState::Main) {
                 g_MenuNav.menuVisible = false;
                 g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             } else {
                 g_MenuNav.currentState = MenuState::Main;
                 g_MenuNav.selectedOption = 0;
@@ -134,8 +136,10 @@ namespace nya {
             if (g_MenuNav.menuVisible) {
                 g_MenuNav.currentState = MenuState::Main;
                 g_MenuNav.selectedOption = 0;
+                nya::hid::toggleInput = true;
             } else {
                 g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             }
         }
 
@@ -143,8 +147,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("KirunaNX - Main Menu", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Use L to toggle menu, DPAD to navigate, A to select, Left Stick to go back");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Main: Combat, Movement, Scene Jumper, Visual, Debug/Test");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::mainOptionsCount; i++) {
@@ -170,8 +174,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Combat Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Combat Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Combat");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::combatOptionsCount; i++) {
@@ -197,8 +201,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Movement Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Movement Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Movement");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::movementOptionsCount; i++) {
@@ -224,8 +228,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Visual Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Visual Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Visual");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::visualOptionsCount; i++) {
@@ -251,8 +255,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Render Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Render Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Scene Jumper");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::renderOptionsCount; i++) {
@@ -278,8 +282,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Debug Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Debug Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Debug/Test");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::debugOptionsCount; i++) {
@@ -331,6 +335,12 @@ namespace nya {
                 case MenuState::Hidden:
                     // Don't render anything
                     break;
+            }
+
+            // If any window was closed via ImGui close button, ensure state and input mirror visibility
+            if (!g_MenuNav.menuVisible) {
+                g_MenuNav.currentState = MenuState::Hidden;
+                nya::hid::toggleInput = false;
             }
         }
     }

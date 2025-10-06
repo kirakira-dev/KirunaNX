@@ -30,7 +30,7 @@ namespace nya {
                 "Combat",
                 "Movement", 
                 "Visual",
-                "Render",
+                "Scene Jumper",
                 "Debug/Test"
             };
             static constexpr int mainOptionsCount = 5;
