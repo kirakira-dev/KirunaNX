@@ -147,8 +147,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("KirunaNX - Main Menu", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Use L to toggle menu, DPAD to navigate, A to select, Left Stick to go back");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Main: Combat, Movement, Scene Jumper, Visual, Debug/Test");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::mainOptionsCount; i++) {
@@ -174,8 +174,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Combat Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Combat Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Combat");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::combatOptionsCount; i++) {
@@ -201,8 +201,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Movement Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Movement Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Movement");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::movementOptionsCount; i++) {
@@ -228,8 +228,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Visual Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Visual Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Visual");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::visualOptionsCount; i++) {
@@ -255,8 +255,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Render Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Render Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Scene Jumper");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::renderOptionsCount; i++) {
@@ -282,8 +282,8 @@ namespace nya {
             ImGui::SetNextWindowPos(ImVec2(50, 50), ImGuiCond_FirstUseEver);
             ImGui::SetNextWindowSize(ImVec2(300, 400), ImGuiCond_FirstUseEver);
             
-            if (ImGui::Begin("Debug Options", &g_MenuNav.menuVisible)) {
-                ImGui::Text("Debug Features");
+            if (ImGui::Begin("KirunaNX", &g_MenuNav.menuVisible)) {
+                ImGui::Text("Debug/Test");
                 ImGui::Separator();
                 
                 for (int i = 0; i < MenuOptions::debugOptionsCount; i++) {
